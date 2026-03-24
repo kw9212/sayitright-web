@@ -58,6 +58,8 @@ export default function EmailComposePage() {
   const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false);
   const [isSavingTemplate, setIsSavingTemplate] = useState(false);
   const [refinementInput, setRefinementInput] = useState('');
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [editableEmail, setEditableEmail] = useState('');
   const [showGuestLimitModal, setShowGuestLimitModal] = useState(false);
   const [guestLimitType, setGuestLimitType] = useState<'template' | 'archive' | 'note' | 'email'>(
     'email',
@@ -253,6 +255,8 @@ export default function EmailComposePage() {
       });
 
       setGeneratedEmail(response.data.email);
+      setEditableEmail(response.data.email);
+      setIsEditingEmail(false);
       if (isRefinement) setRefinementInput('');
 
       sendGAEvent('event', isRefinement ? 'refine_email' : 'generate_email', {
@@ -303,7 +307,7 @@ export default function EmailComposePage() {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(generatedEmail);
+      await navigator.clipboard.writeText(isEditingEmail ? editableEmail : generatedEmail);
       setToastMessage('✅ 클립보드에 복사되었습니다!');
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
@@ -344,7 +348,7 @@ export default function EmailComposePage() {
 
       const templateData = {
         title: title || undefined,
-        content: generatedEmail,
+        content: isEditingEmail ? editableEmail : generatedEmail,
         tone: finalTone,
         relationship: finalRelationship || undefined,
         purpose: finalPurpose || undefined,
@@ -679,7 +683,24 @@ export default function EmailComposePage() {
             </div>
 
             <div className="flex-1 rounded-lg bg-zinc-900 p-6 border border-zinc-800 flex flex-col">
-              <h2 className="text-lg font-semibold mb-4">생성된 이메일</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">생성된 이메일</h2>
+                {generatedEmail && !isGenerating && (
+                  <button
+                    onClick={() => {
+                      if (!isEditingEmail) setEditableEmail(generatedEmail);
+                      setIsEditingEmail((prev) => !prev);
+                    }}
+                    className={`text-xs px-3 py-1 rounded-lg border transition-colors ${
+                      isEditingEmail
+                        ? 'bg-blue-600 border-blue-500 text-white hover:bg-blue-700'
+                        : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500'
+                    }`}
+                  >
+                    {isEditingEmail ? '👁️ 미리보기' : '✏️ 직접 편집'}
+                  </button>
+                )}
+              </div>
 
               {!generatedEmail && !isGenerating && (
                 <div className="flex-1 flex items-center justify-center text-zinc-500">
@@ -703,7 +724,21 @@ export default function EmailComposePage() {
               {generatedEmail && !isGenerating && (
                 <>
                   <div className="flex-1 overflow-auto mb-4">
-                    <div className="text-sm leading-relaxed">{renderMarkdown(generatedEmail)}</div>
+                    {isEditingEmail ? (
+                      <textarea
+                        value={editableEmail}
+                        onChange={(e) => setEditableEmail(e.target.value)}
+                        className="w-full h-full min-h-[200px] px-3 py-3 rounded-lg
+                          bg-zinc-800 border border-blue-500/50 focus:border-blue-500
+                          focus:outline-none transition-colors resize-none
+                          text-sm text-zinc-100 leading-relaxed"
+                        spellCheck={false}
+                      />
+                    ) : (
+                      <div className="text-sm leading-relaxed">
+                        {renderMarkdown(generatedEmail)}
+                      </div>
+                    )}
                   </div>
 
                   {generatedRationale && (
