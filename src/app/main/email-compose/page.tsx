@@ -21,6 +21,7 @@ import {
 import { sendGAEvent } from '@next/third-parties/google';
 import { toast } from 'sonner';
 import SaveTemplateModal from './SaveTemplateModal';
+import HistoryDrawer from './HistoryDrawer';
 
 type EmailFilters = {
   relationship: string;
@@ -64,6 +65,7 @@ export default function EmailComposePage() {
   const [guestLimitType, setGuestLimitType] = useState<'template' | 'archive' | 'note' | 'email'>(
     'email',
   );
+  const [showHistoryDrawer, setShowHistoryDrawer] = useState(false);
 
   const isGuest = auth.status === 'guest';
 
@@ -685,21 +687,31 @@ export default function EmailComposePage() {
             <div className="flex-1 rounded-lg bg-zinc-900 p-6 border border-zinc-800 flex flex-col">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold">생성된 이메일</h2>
-                {generatedEmail && !isGenerating && (
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      if (!isEditingEmail) setEditableEmail(generatedEmail);
-                      setIsEditingEmail((prev) => !prev);
-                    }}
-                    className={`text-xs px-3 py-1 rounded-lg border transition-colors ${
-                      isEditingEmail
-                        ? 'bg-blue-600 border-blue-500 text-white hover:bg-blue-700'
-                        : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500'
-                    }`}
+                    onClick={() => setShowHistoryDrawer(true)}
+                    className="text-xs px-3 py-1 rounded-lg border border-zinc-700 
+                      bg-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 
+                      transition-colors"
                   >
-                    {isEditingEmail ? '👁️ 미리보기' : '✏️ 직접 편집'}
+                    🕐 기록
                   </button>
-                )}
+                  {generatedEmail && !isGenerating && (
+                    <button
+                      onClick={() => {
+                        if (!isEditingEmail) setEditableEmail(generatedEmail);
+                        setIsEditingEmail((prev) => !prev);
+                      }}
+                      className={`text-xs px-3 py-1 rounded-lg border transition-colors ${
+                        isEditingEmail
+                          ? 'bg-blue-600 border-blue-500 text-white hover:bg-blue-700'
+                          : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500'
+                      }`}
+                    >
+                      {isEditingEmail ? '👁️ 미리보기' : '✏️ 직접 편집'}
+                    </button>
+                  )}
+                </div>
               </div>
 
               {!generatedEmail && !isGenerating && (
@@ -878,6 +890,18 @@ export default function EmailComposePage() {
         isOpen={showGuestLimitModal}
         onClose={() => setShowGuestLimitModal(false)}
         limitType={guestLimitType}
+      />
+
+      <HistoryDrawer
+        isOpen={showHistoryDrawer}
+        onClose={() => setShowHistoryDrawer(false)}
+        isGuest={isGuest}
+        onLoad={({ content, rationale }) => {
+          setGeneratedEmail(content);
+          setEditableEmail(content);
+          setIsEditingEmail(false);
+          setGeneratedRationale(rationale ?? '');
+        }}
       />
     </main>
   );
