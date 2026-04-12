@@ -14,6 +14,7 @@ export type ArchiveListItem = {
 
 export type ArchiveDetail = ArchiveListItem & {
   content: string;
+  rationale?: string;
 };
 
 export type ArchivesListQuery = {
