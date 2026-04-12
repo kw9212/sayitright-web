@@ -22,6 +22,8 @@ import { sendGAEvent } from '@next/third-parties/google';
 import { toast } from 'sonner';
 import SaveTemplateModal from './SaveTemplateModal';
 import HistoryDrawer from './HistoryDrawer';
+import FilterPresetBar from './FilterPresetBar';
+import type { FilterPreset } from '@/lib/storage/filter-presets';
 
 type EmailFilters = {
   relationship: string;
@@ -121,6 +123,24 @@ export default function EmailComposePage() {
 
   const handleFilterChange = (key: keyof EmailFilters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleLoadPreset = (preset: FilterPreset) => {
+    setFilters({
+      language: preset.language,
+      relationship: preset.relationship,
+      purpose: preset.purpose,
+      tone: preset.tone ?? '',
+      length: preset.length ?? '',
+    });
+    setCustomInputs({
+      relationship: preset.customRelationship ?? '',
+      purpose: preset.customPurpose ?? '',
+      tone: preset.customTone ?? '',
+    });
+    if (preset.isAdvancedMode) {
+      setIsAdvancedMode(true);
+    }
   };
 
   if (auth.status === 'loading') {
@@ -392,6 +412,20 @@ export default function EmailComposePage() {
           <div className="flex flex-col gap-6">
             <div className="rounded-lg bg-zinc-900 p-6 border border-zinc-800">
               <h2 className="text-lg font-semibold mb-4">필터 설정</h2>
+
+              <FilterPresetBar
+                currentFilters={{
+                  language: filters.language as 'ko' | 'en',
+                  relationship: filters.relationship,
+                  purpose: filters.purpose,
+                  tone: filters.tone,
+                  length: filters.length,
+                }}
+                currentCustomInputs={customInputs}
+                isAdvancedMode={isAdvancedMode}
+                onLoad={handleLoadPreset}
+              />
+
               <div className="mb-6 p-4 rounded-lg bg-zinc-800 border border-zinc-700">
                 <label className="block text-sm font-medium text-zinc-300 mb-3">🌐 언어 선택</label>
                 <div className="flex gap-2">
