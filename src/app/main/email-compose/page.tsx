@@ -24,6 +24,7 @@ import SaveTemplateModal from './SaveTemplateModal';
 import HistoryDrawer from './HistoryDrawer';
 import FilterPresetBar from './FilterPresetBar';
 import type { FilterPreset } from '@/lib/storage/filter-presets';
+import { getAndClearComposePrefill } from '@/lib/storage/compose-prefill';
 
 type EmailFilters = {
   relationship: string;
@@ -89,6 +90,28 @@ export default function EmailComposePage() {
 
     void refreshTokenOnMount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 아카이브 재생성: 페이지 진입 시 sessionStorage에 prefill 데이터가 있으면 결과란에 적용
+  useEffect(() => {
+    const prefill = getAndClearComposePrefill();
+    if (!prefill) return;
+
+    setGeneratedEmail(prefill.content);
+    setEditableEmail(prefill.content);
+    setIsEditingEmail(false);
+    setGeneratedRationale(prefill.rationale ?? '');
+
+    if (prefill.relationship) {
+      setFilters((prev) => ({ ...prev, relationship: prefill.relationship! }));
+    }
+    if (prefill.purpose) {
+      setFilters((prev) => ({ ...prev, purpose: prefill.purpose! }));
+    }
+    if (prefill.tone && prefill.tone !== 'neutral') {
+      setFilters((prev) => ({ ...prev, tone: prefill.tone! }));
+      setIsAdvancedMode(true);
+    }
   }, []);
 
   const getInputLimit = (): number => {
