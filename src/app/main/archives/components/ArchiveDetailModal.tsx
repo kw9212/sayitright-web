@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +13,7 @@ import { archivesRepository, type ArchiveDetail } from '@/lib/repositories/archi
 import { guestArchivesRepository } from '@/lib/repositories/guest-archives.repository';
 import { useAuth } from '@/lib/auth/auth-context';
 import { getToneLabel, getRelationshipLabel, getPurposeLabel } from '@/lib/constants/filter-labels';
+import { setComposePrefill } from '@/lib/storage/compose-prefill';
 import { toast } from 'sonner';
 
 type Props = {
@@ -29,6 +31,7 @@ type Props = {
 export default function ArchiveDetailModal({ archiveId, onClose }: Props) {
   const auth = useAuth();
   const isGuest = auth.status === 'guest';
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [archive, setArchive] = useState<ArchiveDetail | null>(null);
@@ -66,6 +69,18 @@ export default function ArchiveDetailModal({ archiveId, onClose }: Props) {
       void navigator.clipboard.writeText(archive.content);
       toast.success('클립보드에 복사되었습니다.');
     }
+  };
+
+  const handleRegenerate = () => {
+    if (!archive) return;
+    setComposePrefill({
+      content: archive.content,
+      rationale: archive.rationale,
+      tone: archive.tone,
+      relationship: archive.relationship,
+      purpose: archive.purpose,
+    });
+    router.push('/main/email-compose');
   };
 
   const formattedDate = archive?.createdAt
@@ -117,7 +132,13 @@ export default function ArchiveDetailModal({ archiveId, onClose }: Props) {
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-wrap justify-end gap-3">
+              <button
+                onClick={handleRegenerate}
+                className="px-4 py-2 bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors text-sm font-medium"
+              >
+                🔄 이 이메일 기반으로 재생성
+              </button>
               <button
                 onClick={handleCopy}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
