@@ -252,45 +252,22 @@ const toggleStarMutation = useMutation({
 
 ### 🧐 Why React Hook Form + Zod
 
-이메일 생성 폼은 생각보다 복잡했습니다. **필수 필드(relationship, purpose)** 와 **선택 필드(tone, length)** 가 섞여 있고, 각 필드마다 **직접 입력(custom)** 옵션도 지원해야 했습니다.
+회원가입 폼은 단계별로 검증 조건이 달랐습니다. 이메일 입력 → 인증 코드 확인 → 계정 정보 입력의 3단계로 구성되어 있고, 각 단계마다 별도의 검증 스키마가 필요했습니다.
 
-### 복잡한 검증 로직
-
-```txt
-1. relationship이 'custom'이면 customInputs.relationship도 검사
-
-2. 고급 모드 활성화 시 tone/length 필수
-
-3. 입력 제한은 티어와 length에 따라 동적 변경 (150/300/600자)
-```
-
-초기에는 `useState`로 각 필드를 관리하고, `if`문으로 검증했지만 코드가 스파게티가 되었습니다.
+초기에는 `useState`로 각 필드를 관리하고 `if`문으로 검증했지만, 단계가 늘어날수록 검증 로직이 컴포넌트 곳곳에 흩어졌습니다.
 
 ### React Hook Form + Zod로 개선
 
 ```tsx
-const schema = z.object({
-  relationship: z.string().min(1, '관계를 선택해주세요'),
-  purpose: z.string().min(1, '목적을 선택해주세요'),
-  tone: z.string().optional(),
-  length: z.enum(['short', 'medium', 'long']).optional(),
-  draft: z.string().min(1, '내용을 입력해주세요').max(600, '입력 제한을 초과했습니다'),
-});
-
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm({
-  resolver: zodResolver(schema),
-});
+// 단계별로 스키마를 분리해 각 단계의 검증 책임을 명확히 구분
+const emailForm = useForm<EmailFormValues>({ resolver: zodResolver(emailSchema) });
+const verificationForm = useForm<VerificationFormValues>({ resolver: zodResolver(verificationSchema) });
+const signupForm = useForm<SignupFormValues>({ resolver: zodResolver(signupSchema) });
 ```
 
 - **타입 안전성**: Zod 스키마에서 TypeScript 타입이 자동 생성되어, 폼 데이터 타입 오류 방지
-- **에러 메시지 자동 표시**: `errors.relationship?.message`로 에러 메시지 즉시 사용
-- **검증 로직 재사용**: 여러 컴포넌트에서 같은 스키마 사용 가능
-
-폼 검증 코드가 명확해지고, 버그가 90% 줄었습니다.
+- **에러 메시지 자동 표시**: `errors.email?.message`로 에러 메시지 즉시 사용
+- **단계별 검증 로직 분리**: 각 단계의 검증 스키마가 독립적으로 관리되어 유지보수 용이
 
 ---
 
@@ -370,12 +347,12 @@ npm run test:e2e         # E2E 테스트 (Playwright)
 - **해결**: Progress bar + 색상 변화(80% 노란색, 100% 빨간색) + 실시간 글자수 카운터로 시각화. getInputLimit() 함수로 현재 상태에 따라 동적으로 계산
 - **결과**: 사용자가 입력 제한을 직관적으로 파악하고, 초과 전에 조정 가능. 티어별 차별화 명확
 
-### **3. React Hook Form + Zod (타입 안전한 폼 검증)**
+### **3. React Hook Form + Zod (타입 안전한 폼 검증)**
 
-- **구현 과정**: 이메일 생성 시 필수 필드(relationship, purpose)와 선택 필드(tone, length)가 혼재하고, 커스텀 입력도 허용
-- **어려움**: 클라이언트 검증 로직이 컴포넌트 곳곳에 분산되면 유지보수가 어려움
-- **해결**: React Hook Form으로 폼 상태 관리 자동화 + Zod로 런타임 스키마 검증 + TypeScript 타입 추론 활용
-- **결과**: 타입 안전성 확보 + 검증 로직 중앙화 + 에러 핸들링 간결화
+- **구현 과정**: 회원가입 폼이 이메일 입력 → 인증 코드 확인 → 계정 정보 입력의 3단계로 구성되어 각 단계마다 다른 검증 조건 필요
+- **어려움**: `useState` + `if`문으로 단계별 검증을 처리하면 검증 로직이 컴포넌트 곳곳에 분산되어 유지보수가 어려움
+- **해결**: 단계별로 Zod 스키마를 분리(`emailSchema`, `verificationSchema`, `signupSchema`)하고 각각 React Hook Form에 연결해 검증 책임을 명확히 구분
+- **결과**: 타입 안전성 확보 + 단계별 검증 로직 독립화 + 에러 핸들링 간결화
 
 ### **4. TanStack Query (서버 상태 관리 자동화)**
 
@@ -386,7 +363,7 @@ npm run test:e2e         # E2E 테스트 (Playwright)
 
 ### **5. Access Token + Refresh Token 자동 갱신 (AuthContext)**
 
-- **구현 과정**: 페이지 새로고침 또는 재방문 시 로그인 상태 유지 필요. Access Token은 짧은 만료 시간(15분), Refresh Token은 긴 만료(7일)
+- **구현 과정**: 페이지 새로고침 또는 재방문 시 로그인 상태 유지 필요. Access Token은 짧은 만료 시간(30분), Refresh Token은 긴 만료(7일)
 - **어려움**: Access Token 만료 시 자동 갱신 로직을 모든 API 호출마다 넣으면 코드 중복. 갱신 실패 시 guest 모드로 자연스럽게 전환 필요
 - **해결**: bootstrap() 함수에서 1) Access Token 검증 → 2) 실패 시 Refresh Token으로 재발급 → 3) 실패 시 guest 모드. 응답 헤더 x-new-access-token으로 자동 갱신
 - **결과**: 사용자는 로그인 상태를 의식하지 않고 자연스럽게 앱 사용. 토큰 만료 시에도 매끄러운 UX
