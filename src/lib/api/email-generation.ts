@@ -80,13 +80,18 @@ export async function generateEmail(
       }
     }
 
-    const error = await response.json().catch(() => ({
-      message: '이메일 생성 중 오류가 발생했습니다.',
-    }));
+    const error = await response.json().catch(() => null);
+    const backendError = error?.error;
+    const details = backendError?.details ?? error?.details;
+    const message = backendError?.message ?? error?.message;
 
-    const errorMessage = Array.isArray(error.message)
-      ? error.message.join(', ')
-      : error.message || '이메일 생성 중 오류가 발생했습니다.';
+    const errorMessage = Array.isArray(details)
+      ? details.join(', ')
+      : typeof details === 'string'
+        ? details
+        : Array.isArray(message)
+          ? message.join(', ')
+          : message || '이메일 생성 중 오류가 발생했습니다.';
 
     throw new Error(errorMessage);
   }
