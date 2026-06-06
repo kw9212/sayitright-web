@@ -85,29 +85,7 @@ SayItRight은 이러한 고민에서 출발한 서비스입니다.
 
 ## 🗺️ 사용자 UI 흐름
 
-```mermaid
-flowchart TD
-    Start([앱 접속]) --> Bootstrap[토큰 상태 확인]
-
-    Bootstrap -->|Access Token 유효| Main
-    Bootstrap -->|Refresh 성공| Main
-    Bootstrap -->|인증 실패| Intro
-
-    Intro["/intro 서비스 소개"] --> Auth["/auth 로그인 · 회원가입"]
-    Auth -->|로그인| Main
-    Auth -->|회원가입 완료| Main
-    Auth -->|게스트 모드| Main
-
-    Main["/main 대시보드"]
-
-    Main --> EC["/main/email-compose 이메일 작성"]
-    Main --> AR["/main/archives 아카이브"]
-    Main --> TP["/main/templates 템플릿"]
-    Main --> NT["/main/notes 용어 노트"]
-
-    EC -->|이메일 생성 완료| AR
-    AR -->|템플릿으로 전환| TP
-```
+![Frontend User Flow](images/frontend-user-flow.svg)
 
 ---
 

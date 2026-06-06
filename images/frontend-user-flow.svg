@@ -1,0 +1,97 @@
+<svg width="1320" height="860" viewBox="0 0 1320 860" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#334155" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <filter id="shadow" x="-18%" y="-18%" width="136%" height="136%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1320" height="860" rx="30" fill="#F8FAFC"/>
+
+  <text x="64" y="72" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="33" font-weight="700">SayItRight Frontend User Flow</text>
+  <text x="64" y="106" fill="#475569" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="17">같은 화면 흐름에서 사용자 상태에 따라 저장소 구현만 교체되는 구조</text>
+
+  <rect x="64" y="170" width="190" height="78" rx="15" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2" filter="url(#shadow)"/>
+  <text x="159" y="202" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="17" font-weight="700" text-anchor="middle">사용자 진입</text>
+  <text x="159" y="227" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="13" text-anchor="middle">서비스 체험 시작</text>
+
+  <rect x="330" y="154" width="236" height="110" rx="18" fill="#EEF6FF" stroke="#93C5FD" stroke-width="2"/>
+  <text x="448" y="190" fill="#1E3A8A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="17" font-weight="700" text-anchor="middle">AuthProvider</text>
+  <text x="448" y="216" fill="#2563EB" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="13" text-anchor="middle">loading / guest / authenticated</text>
+  <text x="448" y="239" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">Access Token 검증, refresh 시도</text>
+
+  <rect x="650" y="154" width="245" height="110" rx="18" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="772.5" y="190" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="17" font-weight="700" text-anchor="middle">Main Screens</text>
+  <text x="772.5" y="216" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="13" text-anchor="middle">Archives / Templates / Notes</text>
+  <text x="772.5" y="239" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">TanStack Query로 조회·캐싱</text>
+
+  <rect x="978" y="154" width="240" height="110" rx="18" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="1098" y="190" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="17" font-weight="700" text-anchor="middle">Repository 선택</text>
+  <text x="1098" y="216" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="13" text-anchor="middle">isGuest 기준 1회 분기</text>
+  <text x="1098" y="239" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">화면은 동일한 메서드 호출</text>
+
+  <path d="M254 209H328" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <path d="M566 209H648" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <path d="M895 209H976" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+
+  <rect x="120" y="365" width="500" height="350" rx="24" fill="#F0FDF4" stroke="#86EFAC" stroke-width="2"/>
+  <text x="370" y="407" fill="#166534" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="700" text-anchor="middle">Authenticated User</text>
+  <text x="370" y="434" fill="#15803D" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="14" text-anchor="middle">로그인 사용자는 서버 저장소로 연결</text>
+
+  <rect x="176" y="482" width="178" height="64" rx="13" fill="#FFFFFF" stroke="#BBF7D0" stroke-width="2"/>
+  <text x="265" y="509" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">API Repository</text>
+  <text x="265" y="531" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">fetchWithAuth</text>
+
+  <rect x="405" y="482" width="164" height="64" rx="13" fill="#FFFFFF" stroke="#BBF7D0" stroke-width="2"/>
+  <text x="487" y="509" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Next API Routes</text>
+  <text x="487" y="531" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">proxy / auth</text>
+
+  <rect x="176" y="606" width="178" height="64" rx="13" fill="#FFFFFF" stroke="#BBF7D0" stroke-width="2"/>
+  <text x="265" y="633" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">NestJS API</text>
+  <text x="265" y="655" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">Fly.io backend</text>
+
+  <rect x="405" y="606" width="164" height="64" rx="13" fill="#FFFFFF" stroke="#BBF7D0" stroke-width="2"/>
+  <text x="487" y="633" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">PostgreSQL</text>
+  <text x="487" y="655" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">사용자 데이터</text>
+
+  <path d="M354 514H403" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <path d="M487 546C487 582 383 584 354 623" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <path d="M354 638H403" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+
+  <rect x="700" y="365" width="500" height="350" rx="24" fill="#FFF7ED" stroke="#FDBA74" stroke-width="2"/>
+  <text x="950" y="407" fill="#9A3412" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="23" font-weight="700" text-anchor="middle">Guest User</text>
+  <text x="950" y="434" fill="#C2410C" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="14" text-anchor="middle">비로그인 사용자는 브라우저 저장소로 연결</text>
+
+  <rect x="756" y="482" width="190" height="64" rx="13" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="851" y="509" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Guest Repository</text>
+  <text x="851" y="531" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">동일한 list/get/create</text>
+
+  <rect x="992" y="482" width="158" height="64" rx="13" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="1071" y="509" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">IndexedDB</text>
+  <text x="1071" y="531" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">데이터 저장</text>
+
+  <rect x="756" y="606" width="190" height="64" rx="13" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="851" y="633" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">localStorage</text>
+  <text x="851" y="655" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">사용량 / 날짜</text>
+
+  <rect x="992" y="606" width="158" height="64" rx="13" fill="#FFFFFF" stroke="#FED7AA" stroke-width="2"/>
+  <text x="1071" y="633" fill="#0F172A" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" font-weight="700" text-anchor="middle">Guest Limits</text>
+  <text x="1071" y="655" fill="#64748B" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="12" text-anchor="middle">저장 개수 제한</text>
+
+  <path d="M946 514H990" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <path d="M851 546V604" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <path d="M946 638H990" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+
+  <path d="M1098 264C1098 314 413 313 335 480" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <text x="710" y="329" fill="#475569" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="13" text-anchor="middle">authenticated</text>
+
+  <path d="M1098 264C1098 333 934 364 872 480" stroke="#334155" stroke-width="2.2" marker-end="url(#arrow)"/>
+  <text x="1004" y="342" fill="#475569" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="13" text-anchor="middle">guest</text>
+
+  <rect x="86" y="766" width="1148" height="54" rx="15" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="660" y="799" fill="#475569" font-family="Arial, Apple SD Gothic Neo, sans-serif" font-size="15" text-anchor="middle">
+    화면은 저장 방식의 세부 구현을 알지 않고, 선택된 Repository의 동일한 메서드만 호출한다.
+  </text>
+</svg>
